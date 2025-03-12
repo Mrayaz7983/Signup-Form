@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="box"></div>
+    
+    <div class="form">
+        <span><h2 class="heading">SIGNUP FORM</h2>
+        </span>
+        <form id="userForm">
+            <div class="input-box">
+                <input type="text" id="username" required>
+                <span>Username</span>
+            </div>
+            <div class="input-box">
+                <input type="email" id="email" required>
+                <span>Email</span>
+            </div>
+            <div class="input-box">
+                <input type="text" id="phoneNumber" required>
+                <span>Phone Number</span>
+            </div>
+            <button type="submit" id="button">Submit</button>
+        </form>
+    </div>
+
+    <script type="module">
+        // Firebase SDK import
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtCCXnWnGFk9yMdEC0vcvzHq2_4rhwTmM",
+            authDomain: "form-b93aa.firebaseapp.com",
+            projectId: "form-b93aa",
+            storageBucket: "form-b93aa.appspot.com",  // ✅ Fixed storageBucket
+            messagingSenderId: "36519096830",
+            appId: "1:36519096830:web:9b4880fa37b827992450af"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Form Submit Event Listener
+            document.getElementById("userForm").addEventListener("submit", function (event) {
+            event.preventDefault();  // ✅ Prevent form default submission
+
+            // Get user input values
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phoneNumber").value;
+
+            // Firebase Database Reference
+            const usersRef = ref(database, "users");
+            const newUserRef = push(usersRef); // ✅ Generates a unique ID
+
+            set(newUserRef, {
+                username: username,
+                email: email,
+                phone: phone,  // ✅ Fixed variable name
+            }).then(() => {
+                alert("Data successfully sent to Firebase!");
+                document.getElementById("userForm").reset(); // ✅ Clear form after submit
+            }).catch((error) => {
+                alert("Error: " + error.message);
+            });
+        });
+    </script>
+</body>
+
+</html>
